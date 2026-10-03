@@ -1,0 +1,33 @@
+# ---------- Gradle ----------
+.gradle/
+build/
+**/build/
+
+# ---------- Android Studio / IntelliJ ----------
+.idea/
+*.iml
+*.ipr
+*.iws
+captures/
+.externalNativeBuild/
+.cxx/
+
+# ---------- Локальний конфіг (ніколи не комітити) ----------
+local.properties
+
+# ---------- Kotlin / Java ----------
+*.class
+*.log
+
+# ---------- Сервер (Ktor) / секрети — знадобиться пізніше ----------
+.env
+*.env.local
+server/.env
+
+# ---------- Підписані ключі (НІКОЛИ не публікуй) ----------
+*.jks
+*.keystore
+
+# ---------- Інше ----------
+*.bak
+*.tmp
