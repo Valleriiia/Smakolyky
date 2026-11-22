@@ -10,6 +10,7 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.Shuffle
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -41,6 +42,9 @@ fun HomeScreen(
             TopAppBar(
                 title = { Text("Recipe App") },
                 actions = {
+                    IconButton(onClick = { viewModel.loadRandom(onRecipeClick) }) {
+                        Icon(Icons.Default.Shuffle, contentDescription = "Випадковий рецепт")
+                    }
                     IconButton(onClick = onSearchClick) {
                         Icon(Icons.Default.Search, contentDescription = "Пошук")
                     }

@@ -2,6 +2,7 @@ package com.smakolyky.ui.screens.search
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -27,6 +28,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.smakolyky.common.UiState
+import com.smakolyky.ui.components.FilterBar
 import com.smakolyky.ui.components.RecipeCard
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -38,6 +40,8 @@ fun SearchScreen(
 ) {
     val query by viewModel.query.collectAsState()
     val state by viewModel.uiState.collectAsState()
+    val filter by viewModel.filter.collectAsState()
+    val categories by viewModel.categories.collectAsState()
 
     Scaffold(
         topBar = {
@@ -59,30 +63,38 @@ fun SearchScreen(
             )
         },
     ) { padding ->
-        when (val s = state) {
-            is UiState.Loading -> {
-                Box(
-                    modifier = Modifier.padding(padding).fillMaxSize(),
-                    contentAlignment = Alignment.Center,
-                ) {
-                    CircularProgressIndicator()
+        Column(modifier = Modifier.padding(padding).fillMaxSize()) {
+            FilterBar(
+                categories = categories,
+                selectedCategory = filter.category,
+                onCategorySelected = viewModel::onCategorySelected,
+                modifier = Modifier.padding(vertical = 8.dp),
+            )
+            when (val s = state) {
+                is UiState.Loading -> {
+                    Box(
+                        modifier = Modifier.padding(padding).fillMaxSize(),
+                        contentAlignment = Alignment.Center,
+                    ) {
+                        CircularProgressIndicator()
+                    }
                 }
-            }
 
-            is UiState.Error -> {
-                Text(s.message, modifier = Modifier.padding(padding).padding(16.dp))
-            }
+                is UiState.Error -> {
+                    Text(s.message, modifier = Modifier.padding(16.dp))
+                }
 
-            is UiState.Success -> {
-                LazyVerticalGrid(
-                    columns = GridCells.Fixed(2),
-                    contentPadding = PaddingValues(12.dp),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
-                    verticalArrangement = Arrangement.spacedBy(8.dp),
-                    modifier = Modifier.fillMaxSize().padding(padding),
-                ) {
-                    items(s.data, key = { it.id }) { recipe ->
-                        RecipeCard(recipe = recipe, onClick = { onRecipeClick(recipe.id) })
+                is UiState.Success -> {
+                    LazyVerticalGrid(
+                        columns = GridCells.Fixed(2),
+                        contentPadding = PaddingValues(12.dp),
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                        verticalArrangement = Arrangement.spacedBy(8.dp),
+                        modifier = Modifier.fillMaxSize(),
+                    ) {
+                        items(s.data, key = { it.id }) { recipe ->
+                            RecipeCard(recipe = recipe, onClick = { onRecipeClick(recipe.id) })
+                        }
                     }
                 }
             }

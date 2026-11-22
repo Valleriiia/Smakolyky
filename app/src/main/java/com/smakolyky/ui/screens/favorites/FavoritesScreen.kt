@@ -17,6 +17,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.smakolyky.ui.components.RecipeCard
@@ -31,9 +32,10 @@ fun FavoritesScreen(
 
     Scaffold(topBar = { TopAppBar(title = { Text("Улюблені") }) }) { padding ->
         if (favorites.isEmpty()) {
-            Box(modifier = Modifier.padding(padding).fillMaxSize()) {
+            Box(modifier = Modifier.padding(padding).fillMaxSize().padding(24.dp)) {
                 Text(
                     text = "Поки що тут порожньо — додай рецепт у улюблені на його сторінці",
+                    textAlign = TextAlign.Center,
                     modifier = Modifier.align(Alignment.Center),
                 )
             }
@@ -43,7 +45,7 @@ fun FavoritesScreen(
                 contentPadding = PaddingValues(12.dp),
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
                 verticalArrangement = Arrangement.spacedBy(8.dp),
-                modifier = Modifier.fillMaxSize(),
+                modifier = Modifier.padding(padding).fillMaxSize(),
             ) {
                 items(favorites, key = { it.id }) { recipe ->
                     RecipeCard(recipe = recipe, onClick = { onRecipeClick(recipe.id) })

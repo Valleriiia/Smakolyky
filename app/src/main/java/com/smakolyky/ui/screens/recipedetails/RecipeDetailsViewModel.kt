@@ -14,6 +14,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -39,9 +40,12 @@ class RecipeDetailsViewModel
 
         init {
             viewModelScope.launch {
-                recipeRepository.getRecipe(recipeId).collect { recipe ->
-                    _uiState.value = if (recipe != null) UiState.Success(recipe) else UiState.Error("Рецепт не знайдено")
-                }
+                recipeRepository
+                    .getRecipe(recipeId)
+                    .catch { e -> _uiState.value = UiState.Error(e.message ?: "Не вдалося завантажити рецепт") }
+                    .collect { recipe ->
+                        _uiState.value = if (recipe != null) UiState.Success(recipe) else UiState.Error("Рецепт не знайдено")
+                    }
             }
         }
 

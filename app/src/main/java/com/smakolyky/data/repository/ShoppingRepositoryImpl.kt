@@ -43,19 +43,8 @@ class ShoppingRepositoryImpl @Inject constructor(
         )
     }
 
-    override suspend fun toggleChecked(item: ShoppingItem) {
-        shoppingDao.update(
-            ShoppingItemEntity(
-                id = item.id,
-                ingredientName = item.ingredientName,
-                measure = item.measure,
-                recipeId = null,
-                recipeTitle = item.recipeTitle,
-                isChecked = !item.isChecked,
-                addedAt = System.currentTimeMillis(),
-            )
-        )
-    }
+    override suspend fun toggleChecked(item: ShoppingItem) =
+        shoppingDao.setChecked(item.id, !item.isChecked)
 
     override suspend fun clearChecked() = shoppingDao.deleteChecked()
 }
